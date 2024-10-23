@@ -1,6 +1,7 @@
 // server.js
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const app = express();
 const port = 3000;
 
@@ -16,6 +17,7 @@ mongoose.connect(uri)
     console.error('MongoDB connection error:', error);
   });
 
+// Define a Lesson schema
 const lessonSchema = new mongoose.Schema({
   subject: String,
   location: String,
@@ -23,21 +25,19 @@ const lessonSchema = new mongoose.Schema({
   spaces: Number,
 });
 
+// Create a model
 const Lesson = mongoose.model('Lesson', lessonSchema);
 
+app.use(cors()); // Enable CORS for requests from different origins
 app.use(express.json());
 
-// Search route to handle the request
-app.get('/search', async (req, res) => {
+// Get the list of lessons
+app.get('/lessons', async (req, res) => {
   try {
-    const query = req.query.q; // Get the query parameter from the URL
-    const results = await Lesson.find({
-      subject: { $regex: query, $options: 'i' }, // Case-insensitive search
-    });
-
-    res.json(results);
+    const lessons = await Lesson.find();
+    res.json(lessons);
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred' });
+    res.status(500).json({ error: 'An error occurred while fetching lessons' });
   }
 });
 
