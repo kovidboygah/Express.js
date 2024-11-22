@@ -11,7 +11,7 @@ const uri = 'mongodb+srv://kovidboygah:Kovid10072002@cluster0.yzi5d.mongodb.net/
 let db;
 
 // Connect to MongoDB
-MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+MongoClient.connect(uri)
   .then(client => {
     db = client.db('lessonsdb');
     console.log('Connected to MongoDB Atlas');
